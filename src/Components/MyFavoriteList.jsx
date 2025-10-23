@@ -6,7 +6,7 @@ const MyFavoriteList = () => {
   // 🔹 Fetch My List from backend
   const fetchMyList = async () => {
     try {
-      const res = await fetch("http://localhost:3000/mylist");
+      const res = await fetch("https://roommate-finder-server-site-two.vercel.app/mylist");
       const data = await res.json();
       setMyList(data);
     } catch (error) {
@@ -21,7 +21,7 @@ const MyFavoriteList = () => {
 
   const handleDelete = async (id) => {
   try {
-    const res = await fetch(`http://localhost:3000/mylist/${id}`, {
+    const res = await fetch(`https://roommate-finder-server-site-two.vercel.app/mylist/${id}`, {
       method: "DELETE",
     });
     const data = await res.json();

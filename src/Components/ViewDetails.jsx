@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, {   } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { MapPin, DollarSign, Phone, User, Heart } from "lucide-react";
 import { AuthContexts } from "../Contexts/AuthContexts";
@@ -13,7 +13,7 @@ const ViewDetails = () => {
   // 🧩 Handle Add to My List
   const handleAddToList = async () => {
   try {
-    const res = await fetch('http://localhost:3000/mylist', {
+    const res = await fetch('https://roommate-finder-server-site-two.vercel.app/mylist', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(roommate),

@@ -16,7 +16,7 @@ const MyListings = () => {
       return;
     }
     // 🧠 Fetch logged-in user's own listings
-    fetch(`http://localhost:3000/ownlistings?email=${user.email}`)
+    fetch(`https://roommate-finder-server-site-two.vercel.app/ownlistings?email=${user.email}`)
       .then((res) => res.json())
       .then((data) => setListings(data))
       .catch((err) => console.error("Error fetching listings:", err));
@@ -34,7 +34,7 @@ const MyListings = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:3000/ownlistings/${id}`, {
+        fetch(`https://roommate-finder-server-site-two.vercel.app/ownlistings/${id}`, {
           method: "DELETE",
         })
           .then((res) => res.json())
