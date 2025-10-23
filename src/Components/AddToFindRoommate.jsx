@@ -1,40 +1,15 @@
-import React, { useState } from 'react';
-import Swal from 'sweetalert2';
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import Swal from "sweetalert2";
+import { AuthContexts } from "../Contexts/AuthContexts";
 
 const AddToFindRoommate = () => {
+  const navigate = useNavigate();
+  const { id } = useParams(); // 🧠 catch ID if in edit mode
+  const { user } = useContext(AuthContexts);
 
-
-
-     const handleSubmit = e =>{
-        e.preventDefault();
-        const form =e.target;
-        const formData = new FormData(form);
-        const roommateData = Object.fromEntries(formData.entries());
-        console.log(roommateData) 
-
-        // send signup data to the database(db)
-           fetch('http://localhost:3000/addtofindroommate',{
-            method:'POST',
-            headers:{
-                'content-type':'application/json'
-            },
-            body:JSON.stringify(roommateData)
-           })
-           .then(res=>res.json())
-           .then(data=>{
-            console.log('after adding data :',data);
-            Swal.fire({
-                    title: "Submitted Successfully",
-                    icon: "success",
-                    draggable: true
-                });
-           })
-
-
-        }     
-
-     const [formData, setFormData] = useState({
-    title: "",
+  const [formData, setFormData] = useState({
+    photo: "",
     location: "",
     rent: "",
     roomType: "Single",
@@ -46,13 +21,27 @@ const AddToFindRoommate = () => {
     description: "",
     contact: "",
     availability: "Available",
-    userName: "John Doe",
-    userEmail: "john.doe@example.com",
+    userName: user?.displayName || "",
+    userEmail: user?.email || "",
   });
 
-  const handleChange = (e) => {
-    const { name, value,   checked } = e.target;
+  // 🧠 if editing existing listing, fetch old data
+  useEffect(() => {
+    if (id) {
+      fetch(`http://localhost:3000/ownlistings/${id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setFormData({
+            ...data,
+            lifestyle: data.lifestyle || { pets: false, smoking: false, nightOwl: false },
+          });
+        });
+    }
+  }, [id]);
 
+  // 🧠 Handle form input
+  const handleChange = (e) => {
+    const { name, value, checked } = e.target;
     if (name in formData.lifestyle) {
       setFormData({
         ...formData,
@@ -63,25 +52,66 @@ const AddToFindRoommate = () => {
     }
   };
 
-  
+  // 🧠 Submit handler — add or update
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (id) {
+      // ✅ UPDATE mode
+      fetch(`http://localhost:3000/ownlistings/${id}`, {
+        method: "PATCH",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+        .then((res) => res.json())
+        .then(() => {
+          Swal.fire({
+            title: "Updated Successfully!",
+            icon: "success",
+            confirmButtonText: "OK",
+          }).then(() => navigate("/ownlistings"));
+        });
+    } else {
+      // ✅ ADD mode
+      fetch("http://localhost:3000/addtofindroommate", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(formData),
+      })
+        .then((res) => res.json())
+        .then(() => {
+          Swal.fire({
+            title: "Submitted Successfully!",
+            icon: "success",
+            confirmButtonText: "OK",
+          }).then(() => navigate("/browselisting"));
+        });
+    }
+  };
+
   return (
     <div className="max-w-2xl mx-auto p-8 bg-white rounded-xl shadow-lg mt-10 mb-10">
-      <h2 className="text-2xl font-bold mb-6 text-center">Add a Roommate Listing</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center">
+        {id ? "Update Roommate Listing" : "Add a Roommate Listing"}
+      </h2>
+
       <form className="space-y-5" onSubmit={handleSubmit}>
-        {/* Title */}
+        {/* photo url */}
         <div>
-          <label className="block font-medium mb-1">Title</label>
+          <label className="block font-medium mb-1">Photo URL</label>
           <input
-            type="text"
-            name="title"
-            value={formData.title}
+            type="url"
+            name="photo"
+            value={formData.photo}
             onChange={handleChange}
-            placeholder="Looking for a roommate in NYC"
-            className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="link"
+            className="w-full border p-2 rounded"
           />
         </div>
 
-        {/* Location */}
+        {/* location */}
         <div>
           <label className="block font-medium mb-1">Location</label>
           <input
@@ -89,32 +119,32 @@ const AddToFindRoommate = () => {
             name="location"
             value={formData.location}
             onChange={handleChange}
-            placeholder="New York City"
-            className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Dhaka City"
+            className="w-full border p-2 rounded"
           />
         </div>
 
-        {/* Rent */}
+        {/* rent */}
         <div>
-          <label className="block font-medium mb-1">Rent Amount</label>
+          <label className="block font-medium mb-1">Rent</label>
           <input
             type="number"
             name="rent"
             value={formData.rent}
             onChange={handleChange}
             placeholder="800"
-            className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border p-2 rounded"
           />
         </div>
 
-        {/* Room Type */}
+        {/* roomType */}
         <div>
           <label className="block font-medium mb-1">Room Type</label>
           <select
             name="roomType"
             value={formData.roomType}
             onChange={handleChange}
-            className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border p-2 rounded"
           >
             <option>Single</option>
             <option>Shared</option>
@@ -122,41 +152,7 @@ const AddToFindRoommate = () => {
           </select>
         </div>
 
-        {/* Lifestyle Preferences */}
-        <div>
-          <label className="block font-medium mb-1">Lifestyle Preferences</label>
-          <div className="flex gap-4 flex-wrap">
-            <label className="flex items-center gap-1">
-              <input
-                type="checkbox"
-                name="pets"
-                checked={formData.lifestyle.pets}
-                onChange={handleChange}
-              />
-              Pets
-            </label>
-            <label className="flex items-center gap-1">
-              <input
-                type="checkbox"
-                name="smoking"
-                checked={formData.lifestyle.smoking}
-                onChange={handleChange}
-              />
-              Smoking
-            </label>
-            <label className="flex items-center gap-1">
-              <input
-                type="checkbox"
-                name="nightOwl"
-                checked={formData.lifestyle.nightOwl}
-                onChange={handleChange}
-              />
-              Night Owl
-            </label>
-          </div>
-        </div>
-
-        {/* Description */}
+        {/* description */}
         <div>
           <label className="block font-medium mb-1">Description</label>
           <textarea
@@ -164,12 +160,11 @@ const AddToFindRoommate = () => {
             value={formData.description}
             onChange={handleChange}
             rows="3"
-            placeholder="Describe yourself and expectations..."
-            className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border p-2 rounded"
           ></textarea>
         </div>
 
-        {/* Contact */}
+        {/* contact */}
         <div>
           <label className="block font-medium mb-1">Contact Info</label>
           <input
@@ -178,25 +173,11 @@ const AddToFindRoommate = () => {
             value={formData.contact}
             onChange={handleChange}
             placeholder="Phone or WhatsApp"
-            className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border p-2 rounded"
           />
         </div>
 
-        {/* Availability */}
-        <div>
-          <label className="block font-medium mb-1">Availability</label>
-          <select
-            name="availability"
-            value={formData.availability}
-            onChange={handleChange}
-            className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option>Available</option>
-            <option>Not Available</option>
-          </select>
-        </div>
-
-        {/* User Name (Read Only) */}
+        {/* user info */}
         <div>
           <label className="block font-medium mb-1">User Name</label>
           <input
@@ -208,7 +189,6 @@ const AddToFindRoommate = () => {
           />
         </div>
 
-        {/* User Email (Read Only) */}
         <div>
           <label className="block font-medium mb-1">User Email</label>
           <input
@@ -220,19 +200,17 @@ const AddToFindRoommate = () => {
           />
         </div>
 
-        {/* Submit Button */}
         <div className="text-center">
           <button
             type="submit"
             className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
           >
-            Submit 
+            {id ? "Update" : "Submit"}
           </button>
         </div>
       </form>
     </div>
   );
 };
-
 
 export default AddToFindRoommate;

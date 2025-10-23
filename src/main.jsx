@@ -9,6 +9,12 @@ import Home from './Components/Home.jsx';
 import SignIn from './Components/SignIn.jsx';
 import LogIn from './Components/LogIn.jsx';
 import AddToFindRoommate from './Components/AddToFindRoommate.jsx';
+import BrowseListing from './Components/browseListing.jsx';
+import VewDetails from './Components/ViewDetails.jsx';
+ import MyFavoriteList from './Components/MyFavoriteList.jsx';
+import MyListings from './Components/MyListings.jsx';
+import AuthProvider from './Contexts/AuthProvider.jsx';
+import PrivateRoute from './Contexts/privateRoute.jsx';
 
 
 const router = createBrowserRouter([
@@ -18,6 +24,7 @@ const router = createBrowserRouter([
     children:[
       {
         index:true,
+        loader:()=>fetch('http://localhost:3000/addtofindroommate'),
         Component:Home
       },
       {
@@ -30,8 +37,45 @@ const router = createBrowserRouter([
       },
       {
         path:'/addtofindroommate',
-        Component:AddToFindRoommate
+        Component: () => (
+          <PrivateRoute>
+            <AddToFindRoommate />
+          </PrivateRoute>
+        )
+      },
+      {
+        path:'/browselisting',
+        loader:()=>fetch('http://localhost:3000/browselisting'),
+        Component:BrowseListing
+      },
+      {
+        path:'/viewdetails/:id',
+        loader:({params})=>fetch(`http://localhost:3000/viewdetails/${params.id}`),
+        Component:VewDetails
+      },
+      {
+        path:'/mylist',
+        
+         Component: () => (
+          <PrivateRoute>
+            <MyFavoriteList />
+          </PrivateRoute>
+        )
+      },
+      {
+        path:'/ownlistings',
+         Component: () => (
+          <PrivateRoute>
+            <MyListings />
+          </PrivateRoute>
+         )
+      },
+      {
+        path: "/update/:id",
+        element: <AddToFindRoommate />,
       }
+
+
     ]
   },
 ]);
@@ -39,9 +83,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-     
-    <RouterProvider router={router} />
-
-     
+     <AuthProvider>
+            <RouterProvider router={router} />
+     </AuthProvider> 
   </StrictMode>,
 )
