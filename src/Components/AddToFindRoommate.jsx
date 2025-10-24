@@ -28,7 +28,7 @@ const AddToFindRoommate = () => {
   // 🧠 if editing existing listing, fetch old data
   useEffect(() => {
     if (id) {
-      fetch(`https://roommate-finder-server-site-two.vercel.app/ownlistings/${id}`)
+      fetch(`https://roommate-finder-server-site-7ki9.vercel.app/ownlistings/${id}`)
         .then((res) => res.json())
         .then((data) => {
           setFormData({
@@ -58,7 +58,7 @@ const AddToFindRoommate = () => {
 
     if (id) {
       // ✅ UPDATE mode
-      fetch(`https://roommate-finder-server-site-two.vercel.app/ownlistings/${id}`, {
+      fetch(`https://roommate-finder-server-site-7ki9.vercel.app/ownlistings/${id}`, {
         method: "PATCH",
         headers: {
           "content-type": "application/json",
@@ -75,7 +75,7 @@ const AddToFindRoommate = () => {
         });
     } else {
       // ✅ ADD mode
-      fetch("https://roommate-finder-server-site-two.vercel.app/addtofindroommate", {
+      fetch("https://roommate-finder-server-site-7ki9.vercel.app/addtofindroommate", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(formData),
