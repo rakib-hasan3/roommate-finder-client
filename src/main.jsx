@@ -9,7 +9,7 @@ import Home from './Components/Home.jsx';
 import SignIn from './Components/SignIn.jsx';
 import LogIn from './Components/LogIn.jsx';
 import AddToFindRoommate from './Components/AddToFindRoommate.jsx';
-import BrowseListing from './Components/browseListing.jsx';
+import BrowseListing from './Components/BrowseListing.jsx';
 import VewDetails from './Components/ViewDetails.jsx';
  import MyFavoriteList from './Components/MyFavoriteList.jsx';
 import MyListings from './Components/MyListings.jsx';
