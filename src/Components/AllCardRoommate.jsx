@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router';
+import { AuthContexts } from '../Contexts/AuthContexts';
 
 const AllCardRoommate = ({roommate}) => {
-  const nevigate = useNavigate();
+ const navigate = useNavigate(); // ✅ ঠিক নাম ব্যবহার
+   const { user } = useContext(AuthContexts);
   
-  const handleVewDetails = (id) => {
-    nevigate(`/viewdetails/${id}`);
+  const handleVewDetails = (id) => { // ✅ typo ঠিক করা
+    if (!user) {
+      // যদি logged-in না থাকে, login page এ redirect করো
+      navigate("/login");
+      return;
+    }
+
+    // logged-in user হলে view details page এ যাও
+    navigate(`/viewdetails/${id}`);
   };
       const { _id,photo, userName, availability, description, rent } = roommate;
 

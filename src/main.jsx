@@ -9,12 +9,12 @@ import Home from './Components/Home.jsx';
 import SignIn from './Components/SignIn.jsx';
 import LogIn from './Components/LogIn.jsx';
 import AddToFindRoommate from './Components/AddToFindRoommate.jsx';
-import BrowseListing from './Components/BrowseListing.jsx';
-import VewDetails from './Components/ViewDetails.jsx';
+ import VewDetails from './Components/ViewDetails.jsx';
  import MyFavoriteList from './Components/MyFavoriteList.jsx';
 import MyListings from './Components/MyListings.jsx';
 import AuthProvider from './Contexts/AuthProvider.jsx';
 import PrivateRoute from './Contexts/privateRoute.jsx';
+import BrowseListing from './Components/browseListing.jsx';
 
 
 const router = createBrowserRouter([
