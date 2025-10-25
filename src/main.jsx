@@ -24,7 +24,7 @@ const router = createBrowserRouter([
     children:[
       {
         index:true,
-        loader:()=>fetch('https://roommate-finder-server-site-7ki9.vercel.app/addtofindroommate'),
+        loader:()=>fetch('https://roommate-finder-server-site.onrender.com//addtofindroommate'),
         Component:Home
       },
       {
@@ -45,12 +45,12 @@ const router = createBrowserRouter([
       },
       {
         path:'/browselisting',
-        loader:()=>fetch('https://roommate-finder-server-site-7ki9.vercel.app/browselisting'),
+        loader:()=>fetch('https://roommate-finder-server-site.onrender.com//browselisting'),
         Component:BrowseListing
       },
       {
         path:'/viewdetails/:id',
-        loader:({params})=>fetch(`https://roommate-finder-server-site-7ki9.vercel.app/viewdetails/${params.id}`),
+        loader:({params})=>fetch(`https://roommate-finder-server-site.onrender.com//viewdetails/${params.id}`),
         Component:VewDetails
       },
       {
