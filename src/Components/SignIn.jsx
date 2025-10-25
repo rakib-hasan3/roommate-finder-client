@@ -29,7 +29,7 @@ const SignIn = () => {
                     .catch(err => console.log(err));
 
                 // save profile info in the database
-                fetch("https://roommate-finder-server-site.onrender.com//users", {
+                fetch("https://roommate-finder-server-site.onrender.com/users", {
                     method: "POST",
                     headers: { "content-type": 'application/json' },
                     body: JSON.stringify(userProfile)

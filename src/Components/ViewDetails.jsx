@@ -13,7 +13,7 @@ const ViewDetails = () => {
   // 🧩 Handle Add to My List
   const handleAddToList = async () => {
   try {
-    const res = await fetch('https://roommate-finder-server-site.onrender.com//mylist', {
+    const res = await fetch('https://roommate-finder-server-site.onrender.com/mylist', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(roommate),
