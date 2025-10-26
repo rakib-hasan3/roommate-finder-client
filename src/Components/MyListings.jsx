@@ -10,17 +10,15 @@ const MyListings = () => {
 
   // 🔒 Protected route check
   useEffect(() => {
-      if (loading) return; // wait until firebase checks auth
-    if (!user) {
-      navigate("/login");
-      return;
-    }
-    // 🧠 Fetch logged-in user's own listings
-    fetch(`https://roommate-finder-server-site.onrender.com/ownlistings?email=${user.email}`)
-      .then((res) => res.json())
-      .then((data) => setListings(data))
-      .catch((err) => console.error("Error fetching listings:", err));
-  }, [user, navigate]);
+  console.log("User:", user);
+  console.log("Loading:", loading);
+  if (loading) return;
+  if (!user || !user.email) return;
+  fetch(`https://roommate-finder-server-site.onrender.com/ownlistings?email=${user.email}`)
+    .then(res => res.json())
+    .then(data => setListings(data))
+    .catch(err => console.error("Error fetching listings:", err));
+}, [user, loading, navigate]);
 
   // ❌ Handle delete
   const handleDelete = (id) => {
