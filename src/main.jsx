@@ -64,11 +64,11 @@ const router = createBrowserRouter([
       },
       {
         path:'/ownlistings',
-         Component: () => (
-          <PrivateRoute>
-            <MyListings />
-          </PrivateRoute>
-         )
+         Component:  MyListings
+           
+            
+           
+       
       },
       {
         path: "/update/:id",

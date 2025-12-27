@@ -10,15 +10,14 @@ const MyListings = () => {
 
   // 🔒 Protected route check
   useEffect(() => {
-  console.log("User:", user);
-  console.log("Loading:", loading);
-  if (loading) return;
-  if (!user || !user.email) return;
-  fetch(`https://roommate-finder-server-site.onrender.com/ownlistings?email=${user.email}`)
-    .then(res => res.json())
+  if (loading) return; // wait until auth state resolves
+  if (!user || !user.email) return; // protect route
+ 
+fetch(`https://roommate-finder-server-site.onrender.com/ownlistings?email=${user.email}`) 
     .then(data => setListings(data))
     .catch(err => console.error("Error fetching listings:", err));
-}, [user, loading, navigate]);
+}, [user, loading]);
+ 
 
   // ❌ Handle delete
   const handleDelete = (id) => {
@@ -75,7 +74,8 @@ const MyListings = () => {
               </tr>
             </thead>
             <tbody>
-              {listings.map((item) => (
+  {(Array.isArray(listings) ? listings : []).map((item) => (
+                
                 <tr key={item._id} className="hover:bg-red-50">
                   <td className="border px-4 py-2">
                     <img
@@ -83,6 +83,7 @@ const MyListings = () => {
                       alt="Room"
                       className="w-16 h-16 object-cover rounded"
                     />
+                
                   </td>
                   <td className="border px-4 py-2">{item.location}</td>
                   <td className="border px-4 py-2">${item.rent}</td>

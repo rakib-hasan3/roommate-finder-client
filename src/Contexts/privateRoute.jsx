@@ -11,8 +11,10 @@ const PrivateRoute = ({ children }) => {
       <div className="flex justify-center items-center h-screen">
         <span className="loading loading-spinner text-red-500"></span>
       </div>
+     
     );
   }
+    
 
   if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
